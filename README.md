@@ -22,6 +22,7 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 // List anything else that you can get done to improve the app functionality!
+
 - [X] Split the total amount among a party
 
 ## Video Walkthrough 
@@ -35,11 +36,12 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 // Describe any challenges encountered while building the app.
+
 My first step in creating this application was following the provided tip calculator walkthrough step-by-step. Although it was simple to find the right buttons on Xcode, I stuggled to grasp the idea of some key concepts in iOS programming, such as the difference between a delegate and an IBAction and Constraints in Auto Layout. As a result, I found myself looking through many StackOverflow threads in search of an answer that made sense. After producing the basic tip calculator, I wanted to learn about how I could improve my application. I compiled a list of tutorials, but I was unsure which of them were good resources, so I started with the Apple Developer Guide's meal prep app tutorial. Again, the content was confusing, which discouraged me from continuing through the tutorial. I called up one of my close friends, who shared my passion for programming, and we came up with an idea for a Whack-a-mole spinoff. We both knew that we didn't have enough experience to create this application yet, so we've been meeting at least 2 times a week over the winter break to work on iOS programming tutorials together. Having a end goal in mind that we both suppert and working together has motivated us to persevere through the struggles of iOS programming.
 
 ## License
 
-Copyright [2017] [Andy Duong]
+Copyright 2017 Andy Duong
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
