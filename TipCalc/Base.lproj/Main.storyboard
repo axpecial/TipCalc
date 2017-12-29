@@ -231,7 +231,13 @@
                             <outletCollection property="gestureRecognizers" destination="ldL-w4-58H" appends="YES" id="cyM-Ud-NTy"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="TipCalc" id="hNk-Rz-ijW"/>
+                    <navigationItem key="navigationItem" title="TipCalc" id="hNk-Rz-ijW">
+                        <barButtonItem key="rightBarButtonItem" title="Settings" id="bQG-Dv-Frj">
+                            <connections>
+                                <segue destination="OHP-RJ-eRu" kind="push" id="Bh3-CT-zh9"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="backButton" destination="hSy-6a-XRz" id="cEe-55-hyf"/>
                         <outlet property="billField" destination="Tfx-ay-yjL" id="Yj4-3G-Ggz"/>
@@ -253,6 +259,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="660.5" y="136.5"/>
+        </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="3Bb-Rk-1bN">
+            <objects>
+                <viewController id="OHP-RJ-eRu" customClass="SettingsViewController" customModule="TipCalc" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="UVz-Xj-C0Q">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="1xt-Pw-QGI"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VG3-M0-dDV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1061" y="138"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="8CF-sj-PgK">

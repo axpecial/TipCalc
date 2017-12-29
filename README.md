@@ -23,6 +23,7 @@ The following **additional** features are implemented:
 
 // List anything else that you can get done to improve the app functionality!
 
+- [X] Adding a slider bar option to accomodate a larger range of tip percentages.
 - [X] Splitting the total amount among a party.
 
 ## Video Walkthrough 
