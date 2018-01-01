@@ -27,6 +27,7 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
     
     let tipPercentages: [Float] = [0.10, 0.15, 0.18]
     var defaultTipPercentageIdx: Int!
+    var tipIdxBeforeMore: Int!
     
     // MARK: UIViewController
     override func viewDidLoad() {
@@ -38,6 +39,7 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
         tipControlSlider.isHidden = true
         backButton.isHidden = true
         defaultTipPercentageIdx = 1
+        tipIdxBeforeMore = defaultTipPercentageIdx
         
         calculateTip( self )
         calculatePerPerson( self )
@@ -64,6 +66,7 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
         tipControlSlider.value = tipPercentages[ defaultTipPercentageIdx ] * 100
         // Setting default index of segmented control.
         tipControl.selectedSegmentIndex = defaultTipPercentageIdx
+        
         calculateTip( self )
         calculatePerPerson( self )
     }
@@ -75,8 +78,10 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
     
     @IBAction func onMoreButtonPush( _ sender: Any ) {
         
-        // Setting default value of slider.
-        tipControlSlider.value = tipPercentages[ defaultTipPercentageIdx ] * 100
+        tipIdxBeforeMore = tipControl.selectedSegmentIndex
+        
+        // Setting the value of slider to the value of the segmented control for smoother UX.
+        tipControlSlider.value = tipPercentages[ tipIdxBeforeMore ] * 100
         
         tipControl.isHidden = true
         moreButton.isHidden = true
@@ -91,8 +96,7 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
     
     @IBAction func onBackButtonPush( _ sender: Any ) {
         
-        // Setting default index of segmented control.
-        tipControl.selectedSegmentIndex = defaultTipPercentageIdx
+        // Don't need to change the value of the segmentedControl because we want to revert back to the value before the more button was pushed or the default value if the settings page was accessed.
         
         tipControl.isHidden = false
         moreButton.isHidden = false

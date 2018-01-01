@@ -36,6 +36,7 @@ class SettingsViewController: UIViewController {
     }
     
     override func viewWillDisappear( _ animated: Bool ) {
+        super.viewWillDisappear( animated )
         delegate?.settingsDidFinish( controller: self, defaultIdx: defaultTipPercentageIdx )
     }
 
