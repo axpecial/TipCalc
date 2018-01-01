@@ -8,12 +8,26 @@
 
 import UIKit
 
+protocol SettingsViewControllerDelegate {
+    func settingsDidFinish( controller: SettingsViewController, defaultIdx: Int )
+}
+
 class SettingsViewController: UIViewController {
 
+    // MARK: Properties
+    @IBOutlet weak var tipControl: UISegmentedControl!
+    
+    var defaultTipPercentageIdx: Int!
+    var delegate: SettingsViewControllerDelegate?
+    
+    // MARK: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
+        defaultTipPercentageIdx = 1
+        tipControl.selectedSegmentIndex = defaultTipPercentageIdx
+        
+        // Do not set delegate to nil here because the delegate was already set in the prepare function of the parent vc.
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,15 +35,12 @@ class SettingsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewWillDisappear( _ animated: Bool ) {
+        delegate?.settingsDidFinish( controller: self, defaultIdx: defaultTipPercentageIdx )
     }
-    */
 
+    // MARK: Actions
+    @IBAction func setDefaultTipPercentageIdx( _ sender: Any ) {
+        defaultTipPercentageIdx = tipControl.selectedSegmentIndex
+    }
 }

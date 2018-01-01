@@ -8,9 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController, SettingsViewControllerDelegate {
     
-    // Q: What do the dots to the left side that map to specific views on the story board represent?     
+    // MARK: Properties
+    // Q: What do the dots to the left side that map to specific elements on the story board represent?
+    // A: Those show which element of the storyboard is connected to each variable. If there is a blue bookmark, that is a breakpoint that can be set by clicking on a specific line in the margins.
     @IBOutlet weak var billField: UITextField!
     @IBOutlet weak var tipLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
@@ -21,112 +23,127 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var partyNumberField: UITextField!
     @IBOutlet weak var perPersonLabel: UILabel!
+    @IBOutlet weak var settingsBarButtonItem: UIBarButtonItem!
     
+    let tipPercentages: [Float] = [0.10, 0.15, 0.18]
+    var defaultTipPercentageIdx: Int!
     
     // MARK: UIViewController
     override func viewDidLoad() {
-        super.viewDidLoad();
+        super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
-        billField.delegate = self;
-        partyNumberField.delegate = self;
-        billField.becomeFirstResponder();
-        tipControlSlider.isHidden = true;
-        backButton.isHidden = true;
-        calculateTip( Any.self );
+        self.title = "TipCalc"
+        billField.becomeFirstResponder()
+        tipControlSlider.isHidden = true
+        backButton.isHidden = true
+        defaultTipPercentageIdx = 1
+        
+        calculateTip( self )
+        calculatePerPerson( self )
     }
 
     override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning();
+        super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: UITextFieldDelegate
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        // Hide the keyboard.
-        textField.resignFirstResponder()
-        return true
-        
+    // I stayed up until 6 am because I did not realize the prepare function of this view controller is called before the viewDidLoad function of the settings view controller. In the viewDidLoad function of the settings vc, I set its delegate to nil, after I had set its delegate to this, meaning that this vc's delegate method would never be called.
+    override func prepare( for segue: UIStoryboardSegue, sender: Any! ) {
+        if let vc = segue.destination as? SettingsViewController {
+            vc.delegate = self
+        }
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        calculateTip( self );
-        calculatePerPerson( self );
+    // MARK: SettingsViewControllerDelegate
+    func settingsDidFinish( controller: SettingsViewController, defaultIdx: Int ) {
+        
+        defaultTipPercentageIdx = defaultIdx
+        
+        // Setting default value of slider.
+        tipControlSlider.value = tipPercentages[ defaultTipPercentageIdx ] * 100
+        // Setting default index of segmented control.
+        tipControl.selectedSegmentIndex = defaultTipPercentageIdx
+        calculateTip( self )
+        calculatePerPerson( self )
     }
     
     // MARK: Actions
     @IBAction func onTap( _ sender: Any ) {
-        view.endEditing( true );
+        view.endEditing( true )
     }
     
     @IBAction func onMoreButtonPush( _ sender: Any ) {
         
         // Setting default value of slider.
-        tipControlSlider.value = 15.0;
+        tipControlSlider.value = tipPercentages[ defaultTipPercentageIdx ] * 100
         
-        tipControl.isHidden = true;
-        moreButton.isHidden = true;
+        tipControl.isHidden = true
+        moreButton.isHidden = true
         
-        tipControlSlider.isHidden = false;
-        backButton.isHidden = false;
+        tipControlSlider.isHidden = false
+        backButton.isHidden = false
+        
+        calculateTip( self )
+        calculatePerPerson( self )
         
     }
     
     @IBAction func onBackButtonPush( _ sender: Any ) {
         
         // Setting default index of segmented control.
-        tipControl.selectedSegmentIndex = 1;
+        tipControl.selectedSegmentIndex = defaultTipPercentageIdx
         
-        tipControl.isHidden = false;
-        moreButton.isHidden = false;
+        tipControl.isHidden = false
+        moreButton.isHidden = false
         
-        tipControlSlider.isHidden = true;
-        backButton.isHidden = true;
+        tipControlSlider.isHidden = true
+        backButton.isHidden = true
         
         // Q: What is Any.self?
         // Q: What is the difference between delegate methods and actions?
+        calculateTip( self )
+        calculatePerPerson( self )
     }
     
     @IBAction func calculateTip( _ sender: Any ) {
-        var bill: Double, tip: Double, total: Double;
-        let tipPercentages = [0.10, 0.15, 0.18];
+        var bill: Float, tip: Float, total: Float
         
-        bill = Double( billField.text! ) ?? 0;
+        bill = Float( billField.text! ) ?? 0
         
         // Tip based on segmented control.
         if ( tipControlSlider.isHidden ) {
-            tipPercentLabel.text = String( format: "%d%%", Int( tipPercentages[ tipControl.selectedSegmentIndex ] * 100 ) );
-            tip = bill * tipPercentages[ tipControl.selectedSegmentIndex ];
+            tipPercentLabel.text = String( format: "%d%%", Int( tipPercentages[ tipControl.selectedSegmentIndex ] * 100 ) )
+            tip = bill * tipPercentages[ tipControl.selectedSegmentIndex ]
         }
         // Tip based on slide control.
         // Q: Is there a better way of doing this?
         else {
-            tipPercentLabel.text = String( format: "%d%%", Int( tipControlSlider.value ) );
-            tip = bill * Double( Int( tipControlSlider.value ) ) / 100;
+            tipPercentLabel.text = String( format: "%d%%", Int( tipControlSlider.value ) )
+            tip = bill * ( tipControlSlider.value / 100.0 )
             
         }
-        tipLabel.text = String( format: "%.2f", tip );
+        tipLabel.text = String( format: "%.2f", tip )
 
-        total = bill + tip;
-        totalLabel.text = String( format: "%.2f", total );
+        total = bill + tip
+        totalLabel.text = String( format: "%.2f", total )
     }
     
     @IBAction func calculatePerPerson(_ sender: Any) {
-        // Q: This is a work-around to a problem that the calculatePerPerson needs to wait for calculateTip to update the total before using it.
-        calculateTip( Any.self );
+        // Q: This is a work-around to a problem that the calculatePerPerson needs to wait for calculateTip to update the total before using it. Is this good practice?
+        calculateTip( self )
         
-        var numPeople: Int;
-        var total: Double;
+        var numPeople: Int
+        var total: Float
         
-        numPeople = Int( partyNumberField.text! ) ?? 0;
-        total = Double( totalLabel.text! ) ?? 0;
+        numPeople = Int( partyNumberField.text! ) ?? 0
+        total = Float( totalLabel.text! ) ?? 0
         
         if ( numPeople == 0 ) {
-            perPersonLabel.text = "";
+            perPersonLabel.text = "0.00"
         }
         else {
-             perPersonLabel.text = String( format: "%.2f", total / Double( numPeople ) );
+             perPersonLabel.text = String( format: "%.2f", total / Float( numPeople ) )
         }
     }
 }
